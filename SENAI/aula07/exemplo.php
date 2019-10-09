@@ -1,5 +1,13 @@
 <?php
     require_once("bd/conexao.php");
+
+    // 02/10 Ativa o recurso de variaveis de sessão do servidor
+    // 02/10 valida se a variavel de sessao ja foi iniciada
+    if(!isset($_SESSION))
+    {
+        session_start();    
+    }
+
     
     $conexao = conexaoMysql();
     $slqEdit = "";
@@ -15,6 +23,9 @@
         {
             // resgata o id do registro
            $codigo = $_GET['codigo'];
+            // 02/10  variavel de sessao para enviar o codigo do registro para outra página    
+            $_SESSION['codigo'] = $codigo;
+            
            $slqEdit = "select * from tblcontatos where codigo =".$codigo;
             
            $select = mysqli_query($conexao, $slqEdit);
@@ -50,9 +61,43 @@
             CRUD - Contatos
         </title>
         <link rel="stylesheet" type="text/css" href="css/style.css" >
+        <!--  02/10 1 Sempre primero -->
+        <script src="js/jquery.js"></script>
         <script src="js/modulo.js"></script>
+        
+        <!-- 02/10 2 entre parenteses o q ele vai manipular (pagina) ready (quando for lida) é o evento executa uma função (chamada no proprio jquery)-->
+        <script>
+            $(document).ready(function(){
+                // 3 função para abrir a modal
+                $('.visualizar').click(function(){
+                    $('#container').fadeIn(1000);   
+                });      
+            });
+            
+            // 4  recuperar o id no js através de parametro 
+            function visualizarDados(idItem)
+            {
+                // permite manipulação de frm no html
+                $.ajax({
+                    type:"POST",
+                    url: "",
+                    data: {modo:'visualizar', codigo: idItem},
+                    success: function(dados){
+                    $('#modal').html(dados);
+                    } 
+                });      
+            }
+        </script>
     </head>
     <body>
+        <!-- 02/10 0 modal descarregar outra pagina  
+            Construir a modal q irá receber de outro arquivo, através do javaScript 
+        -->
+        <div id="container">
+            <div id="modal">
+                <span> Fechar </span>
+            </div>
+        </div>
        <div id="main">
            <h1> Cadastro de Contatos </h1>
            
@@ -145,7 +190,7 @@
                     
                     <a onclick="return confirm('Deseja escluir esse registro ?');" href="bd/deletar.php?modo=excluir&codigo=<?=$rsContatos['codigo']?>" class="icon"> <img src="img/x.png"> </a> 
                     
-                    <a href="" class="icon"> <img src="img/lupa.png"></a>
+                    <a href="#" class="visualizar" onclick="visualizarDados(<?=$rsContatos['codigo']?>);"> <img src="img/lupa.png"></a>
                 </div>
             <?php } ?>
         </div>
