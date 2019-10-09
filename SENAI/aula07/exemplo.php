@@ -1,6 +1,4 @@
 <?php
-    require_once("bd/conexao.php");
-
     // 02/10 Ativa o recurso de variaveis de sessão do servidor
     // 02/10 valida se a variavel de sessao ja foi iniciada
     if(!isset($_SESSION))
@@ -9,11 +7,14 @@
     }
 
     
-    $conexao = conexaoMysql();
+    
     $slqEdit = "";
     $checkM = "";
     $checkF = "";
     $botao = "inserir";
+
+    require_once("bd/conexao.php");
+    $conexao = conexaoMysql();
 
     //valida se existe a variável modo
     if(isset($_GET['modo']))
@@ -79,7 +80,7 @@
             {
                 // permite manipulação de frm no html
                 $.ajax({
-                    type:"POST",
+                    type:"GET",
                     url: "",
                     data: {modo:'visualizar', codigo: idItem},
                     success: function(dados){
