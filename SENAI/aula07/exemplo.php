@@ -72,7 +72,11 @@
                 // 3 função para abrir a modal
                 $('.visualizar').click(function(){
                     $('#container').fadeIn(1000);   
-                });      
+                });  
+                
+                $('#fechar').click(function(){
+                    $('#container').fadeOut(1000);
+                })
             });
             
             // 4  recuperar o id no js através de parametro 
@@ -80,11 +84,11 @@
             {
                 // permite manipulação de frm no html
                 $.ajax({
-                    type:"GET",
-                    url: "",
+                    type:"POST",
+                    url: "modalContatos.php",
                     data: {modo:'visualizar', codigo: idItem},
                     success: function(dados){
-                    $('#modal').html(dados);
+                    $('#modalDados').html(dados);
                     } 
                 });      
             }
@@ -96,7 +100,8 @@
         -->
         <div id="container">
             <div id="modal">
-                <span> Fechar </span>
+                <div id="fechar">Fechar</div>
+                <div id="modalDados"></div>
             </div>
         </div>
        <div id="main">
