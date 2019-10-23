@@ -12,6 +12,8 @@
     $checkM = "";
     $checkF = "";
     $botao = "inserir";
+    $codEstado = (int) 0;
+    $siglaEstado = (string) "";
 
     require_once("bd/conexao.php");
     $conexao = conexaoMysql();
@@ -27,7 +29,10 @@
             // 02/10  variavel de sessao para enviar o codigo do registro para outra página    
             $_SESSION['codigo'] = $codigo;
             
-           $slqEdit = "select * from tblcontatos where codigo =".$codigo;
+           $slqEdit = "select tblcontatos.*, tblestado.sigla
+                       from tblcontatos inner join tblestado
+                       on tblestado.codigo = tblcontatos.codestado
+                       where tblcontatos.codigo =".$codigo;
             
            $select = mysqli_query($conexao, $slqEdit);
             
@@ -42,6 +47,10 @@
                $data_nascimento = $data_nascimento[2]."/".$data_nascimento[1]."/".$data_nascimento[0];
                $obs = $rs['obs'];
                $sexo = $rs['sexo'];
+               
+               $codEstado = $rs['codestado'];
+               $siglaEstado = $rs['sigla'];
+               
                
                //teste qual é o sexo
                if($sexo == "M")
@@ -148,6 +157,32 @@
                </div>
                
                <div class="item">
+                   <p>Estado: </p>
+                   <select name="sltestados" class="input">
+                       
+                        <?php if($_GET['modo'] == 'editar'){ ?>
+                       
+                            <option value="<?=$codEstado?>"> <?=$siglaEstado?></option>
+                       
+                        <?php } else {?>
+                        <option value=""> Selecione um estado </option>
+                       
+                       <!-- Listagem dos estados da tabela de estados -->
+                        <?php
+                            }
+                            $sql = "select * from tblestado
+                                    where codigo <> ".$codEstado;
+                            $select = mysqli_query($conexao, $sql);
+                            while($rsEstados = mysqli_fetch_array($select)){
+                         ?>
+                            <option value="<?=$rsEstados['codigo']?>">
+                                <?=$rsEstados['sigla']?>
+                            </option>
+                        <?php }?>
+                   </select>
+               </div>
+               
+               <div class="item">
                    <p>Sexo: </p>
                    <input class="input" type="radio" <?=$checkF?> name="rdosexo" value="F" required />
                    <span> Feminino</span>
@@ -170,10 +205,13 @@
             <div class="consulta_itens"> Telefone </div>
             <div class="consulta_itens"> Celular </div>
             <div class="consulta_itens"> Email </div>
+            <div class="consulta_itens"> Estado </div>
             <div class="consulta_itens"> Opções </div>
             <!--            -->
             <?php 
-                $sql = "select  * from tblcontatos";    
+                $sql = "select tblcontatos.*, tblestado.sigla
+                        from tblcontatos inner join tblestado
+                        on tblestado.codigo = tblcontatos.codestado; ";    
                 $select = mysqli_query($conexao, $sql);
                 /* 
                     Exemplos de funções que convertem a resposta do banco em formato de dados
@@ -190,6 +228,7 @@
                 <div class="consulta_itens backcolor"> <?=$rsContatos['telefone']; ?></div>
                 <div class="consulta_itens backcolor">  <?=$rsContatos['celular']; ?></div>
                 <div class="consulta_itens backcolor"> <?=$rsContatos['email']; ?> </div>
+                <div class="consulta_itens backcolor"> <?=$rsContatos['sigla']; ?> </div>
                 <div class="consulta_itens backcolor">
                     
                     <a href="exemplo.php?modo=editar&codigo=<?=$rsContatos['codigo']?>" class="icon"> <img src="img/pencil.png"></a> 
@@ -202,3 +241,27 @@
         </div>
     </body>
 </html>
+<!--
+    Formas de relacionar tabelas:
+
+    select tblcontatos.*, tblestado.sigla
+    from tblcontatos, tblestado
+    where tblestado.codigo = tblcontatos.codeestado
+
+    And...
+
+    OU
+
+    //select tblcontatos.*, tblestado.sigla, tblestado.descricao
+    //select tblcontatos.*, tblestado.sigla, 
+      tblestado.nome as estadoNome, tblcontatos.nome as contatoNome
+
+      ("Apelida" os campos, visto que possuem o mesmo nome)
+    //
+
+    select tblcontatos.*, tblestado.sigla
+    from tblcontatos inner join tblestado 
+    on tblestado.codigo = tblcontatos.codestado
+
+    inner join...
+-->

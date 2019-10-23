@@ -42,18 +42,19 @@
         $data_nascimento = $data_nascimento[2]."-".$data_nascimento[1]."-".$data_nascimento[0];
         $sexo = $_GET['rdosexo'];
         $obs = $_GET['txtobs'];
+        $estado = $_GET['sltestados'];
         
         // 02/10 Verifica se o valor do btnsalvar é inserir
         if(strtoupper($_GET['btnsalvar']) == "INSERIR" )
         {
             //mesmo nome dos bang do banco 
-        $sql = "insert into tblcontatos (nome, telefone, celular, email, dt_nasc, sexo, obs)
-                values('".$nome."', '".$telefone."', '".$celular."', '".$email."', '".$data_nascimento."', '".$sexo."', '".$obs."')"; 
+        $sql = "insert into tblcontatos (nome, telefone, celular, email, dt_nasc, sexo, obs, codestado)
+                values('".$nome."', '".$telefone."', '".$celular."', '".$email."', '".$data_nascimento."', '".$sexo."', '".$obs."',".$estado.")"; 
         } // Verifica se o valor do btnsalvar é editar
         elseif(strtoupper($_GET['btnsalvar']) == "EDITAR")
         {
             $sql = "update tblcontatos set
-                    nome='".$nome."', telefone='".$telefone."', celular='".$celular."', email='".$email."', dt_nasc='".$data_nascimento."', sexo='".$sexo."', obs='".$obs."'
+                    nome='".$nome."', telefone='".$telefone."', celular='".$celular."', email='".$email."', dt_nasc='".$data_nascimento."', sexo='".$sexo."', obs='".$obs."', codestado=".$estado."
                     where codigo =".$_SESSION['codigo'];        
         }
        //EXECUTA UM SCRIPT NO BANCO DE DADOS (SE O SCRIPT DER CERTO IREMOS REDIRECIONAR PARA A PÁGINA DE CADASTRO)
