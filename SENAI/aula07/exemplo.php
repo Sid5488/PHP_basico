@@ -129,8 +129,8 @@
                 onkeypress - faz o tratamento antes de processar
                 onkeyup - processa o dado, exibe na caixa e dps faz o tratamento
             -->
-           
-           <form method="get" action="bd/salvar.php" name="frmcontato">
+           <!-- Sem o enctype="multipart/form-data" o formulário não resgata as fotos e é obrigatório que o método seja POST         -->
+           <form method="post" action="bd/salvar.php" name="frmcontato" enctype="multipart/form-data">
                <div class="item">
                    <p>Nome: </p>
                    <input placeholder="Digite seu nome" class="input" value="<?=@$nome;?>" type="text" name="txtnome" maxlength="20" size="18" required onkeypress="return validarEntrada(event, 'string');" />
@@ -149,6 +149,12 @@
                <div class="item">
                    <p>Email: </p>
                    <input class="input" value="<?=@$email;?>" type="email" name="txtemail" maxlength="20" size="18" required />
+               </div>
+               
+               <div class="item">
+                   <p>Foto: </p>
+                   <input class="input" type="file" name="flefoto" accept="image/jpeg, image/png, image/jpg"
+                   />
                </div>
                
                <div class="item">
@@ -210,9 +216,12 @@
             <!--            -->
             <?php 
                 $sql = "select tblcontatos.*, tblestado.sigla
-                        from tblcontatos inner join tblestado
-                        on tblestado.codigo = tblcontatos.codestado; ";    
+                        from tblcontatos Inner Join tblestado
+                        on tblestado.codigo=tblcontatos.codestado";   
+                      
                 $select = mysqli_query($conexao, $sql);
+                      
+    
                 /* 
                     Exemplos de funções que convertem a resposta do banco em formato de dados
                     para a manipulação:
@@ -220,9 +229,11 @@
                         mysql_fetch_assoc()
                         mysqli_fetch_object()
                 */
+                      
                 
                 while ($rsContatos = mysqli_fetch_array($select))
                 {
+                    
             ?>
                 <div class="consulta_itens backcolor"> <?=$rsContatos['nome']; ?> </div>
                 <div class="consulta_itens backcolor"> <?=$rsContatos['telefone']; ?></div>
