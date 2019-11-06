@@ -14,6 +14,7 @@
     $botao = "inserir";
     $codEstado = (int) 0;
     $siglaEstado = (string) "";
+    $nomeFoto = (string) "";
 
     require_once("bd/conexao.php");
     $conexao = conexaoMysql();
@@ -47,6 +48,7 @@
                $data_nascimento = $data_nascimento[2]."/".$data_nascimento[1]."/".$data_nascimento[0];
                $obs = $rs['obs'];
                $sexo = $rs['sexo'];
+               $nomeFoto = $rs['foto'];
                
                $codEstado = $rs['codestado'];
                $siglaEstado = $rs['sigla'];
@@ -58,6 +60,7 @@
                else
                    $checkF = "checked";
                
+               $_SESSION['nomeFoto'] = $nomeFoto;
                $botao = "editar";
            }
         }
@@ -199,7 +202,9 @@
                    <h3>Obs: </h3>
                    <textarea name="txtobs" cols="20" rows="5"><?=@$obs;?></textarea>
                </div>
-               
+               <div class="item_foto">
+                   <img src="bd/arquivos/<?=$nomeFoto?>">
+               </div>
                <input type="submit" name="btnsalvar" value="<?=$botao?>" id="btnsalvar" />
                <input type="submit" name="btnlimpar" value="limpar" id="btnlimpar" />
            </form>
@@ -212,6 +217,7 @@
             <div class="consulta_itens"> Celular </div>
             <div class="consulta_itens"> Email </div>
             <div class="consulta_itens"> Estado </div>
+            <div class="consulta_itens"> Foto </div>
             <div class="consulta_itens"> Opções </div>
             <!--            -->
             <?php 
@@ -240,11 +246,14 @@
                 <div class="consulta_itens backcolor">  <?=$rsContatos['celular']; ?></div>
                 <div class="consulta_itens backcolor"> <?=$rsContatos['email']; ?> </div>
                 <div class="consulta_itens backcolor"> <?=$rsContatos['sigla']; ?> </div>
+                <div class="consulta_itens backcolor"> 
+                    <img class="img_foto" src="bd/arquivos/<?=$rsContatos['foto']; ?>"/>
+                </div>
                 <div class="consulta_itens backcolor">
                     
                     <a href="exemplo.php?modo=editar&codigo=<?=$rsContatos['codigo']?>" class="icon"> <img src="img/pencil.png"></a> 
                     
-                    <a onclick="return confirm('Deseja escluir esse registro ?');" href="bd/deletar.php?modo=excluir&codigo=<?=$rsContatos['codigo']?>" class="icon"> <img src="img/x.png"> </a> 
+                    <a onclick="return confirm('Deseja escluir esse registro ?');" href="bd/deletar.php?modo=excluir&codigo=<?=$rsContatos['codigo']?>&nomeFoto=<?=$rsContatos['foto']?>" class="icon"> <img src="img/x.png"> </a> 
                     
                     <a href="#" class="visualizar" onclick="visualizarDados(<?=$rsContatos['codigo']?>);"> <img src="img/lupa.png"></a>
                 </div>
