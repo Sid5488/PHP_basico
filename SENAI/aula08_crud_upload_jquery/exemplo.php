@@ -1,13 +1,11 @@
 <?php
-    // 02/10 Ativa o recurso de variaveis de sessão do servidor
-    // 02/10 valida se a variavel de sessao ja foi iniciada
+    // Ativa o recurso de variaveis de sessão do servidor
     if(!isset($_SESSION))
     {
         session_start();    
     }
 
-    
-    
+    //Declaração de variáveis
     $slqEdit = "";
     $checkM = "";
     $checkF = "";
@@ -90,6 +88,13 @@
                 $('#fechar').click(function(){
                     $('#container').fadeOut(1000);
                 })
+                
+                //Function p/ fazer o upload e o preview da imagem
+                $('#fileFoto').live('change', function(){
+                    $('#formFoto').ajaxForm({
+                        target: '#foto' //Call Back do upload.php
+                    }).submit();
+                });
             });
             
             // 4  recuperar o id no js através de parametro 
@@ -120,7 +125,8 @@
        <div id="main">
            <h1> Cadastro de Contatos </h1>
            
-            <form method="post" action="" name="frmfoto" enctype="multipart/form-data" id="formFoto">
+           <!-- FORMULÁRIO APENAS COM A FOTO -->
+            <form method="post" action="bd/upload.php" name="frmfoto" enctype="multipart/form-data" id="formFoto">
                 <div class="item">
                    <p>Foto: </p>
                    <input class="input" id="fileFoto" type="file" name="flefoto" accept="image/jpeg, image/png, image/jpg"
@@ -191,8 +197,8 @@
                    <h3>Obs: </h3>
                    <textarea name="txtobs" cols="20" rows="5"><?=@$obs;?></textarea>
                </div>
-               <div class="item_foto">
-                   <img src="bd/arquivos/<?=$nomeFoto?>">
+               <div class="item_foto" id="foto">
+                    <img src="bd/arquivos/<?=$nomeFoto?>"> 
                </div>
                <input type="submit" name="btnsalvar" value="<?=$botao?>" id="btnsalvar" />
                <input type="submit" name="btnlimpar" value="limpar" id="btnlimpar" />
@@ -215,17 +221,7 @@
                         on tblestado.codigo=tblcontatos.codestado";   
                       
                 $select = mysqli_query($conexao, $sql);
-                      
-    
-                /* 
-                    Exemplos de funções que convertem a resposta do banco em formato de dados
-                    para a manipulação:
-                        mysqli_fetch_array() 
-                        mysql_fetch_assoc()
-                        mysqli_fetch_object()
-                */
-                      
-                
+                              
                 while ($rsContatos = mysqli_fetch_array($select))
                 {
                     
@@ -250,27 +246,3 @@
         </div>
     </body>
 </html>
-<!--
-    Formas de relacionar tabelas:
-
-    select tblcontatos.*, tblestado.sigla
-    from tblcontatos, tblestado
-    where tblestado.codigo = tblcontatos.codeestado
-
-    And...
-
-    OU
-
-    //select tblcontatos.*, tblestado.sigla, tblestado.descricao
-    //select tblcontatos.*, tblestado.sigla, 
-      tblestado.nome as estadoNome, tblcontatos.nome as contatoNome
-
-      ("Apelida" os campos, visto que possuem o mesmo nome)
-    //
-
-    select tblcontatos.*, tblestado.sigla
-    from tblcontatos inner join tblestado 
-    on tblestado.codigo = tblcontatos.codestado
-
-    inner join...
--->
