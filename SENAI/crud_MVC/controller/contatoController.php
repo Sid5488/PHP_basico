@@ -4,9 +4,9 @@
         * AUTOR: YASMIN PEREIRA DA SILVA
         * DATA DE CRIAÇÃO: 25/11/19
         * MODIFICAÇÕES:
-            DATA:
-            ALTERAÇÕES REALIZADAS:
-            NOME DO DESENVOLVEDOR:
+          DATA:
+          ALTERAÇÕES REALIZADAS:
+          NOME DO DESENVOLVEDOR:
     */
     class ContatoController
     {
@@ -37,25 +37,29 @@
         }
         
         //Atualiza/edita um contato
-        public function atualizarContato()
+        public function atualizaContato()
         {
             
         }
         
         //Exclui um contato
-        public function excluirContato()
+        public function deletaContato()
         {
             
         }
         
         //Lista todos os contatos
-        public function listarContato()
+        public function listaContato()
         {
+            //Instancia da classe contatoDAO
+            $contatoController = new ContatoDAO();
             
+            //Chama o método que seleciona todos os registros
+            return $contatoController->selectAllContato();
         }
         
         //Busca um contato pelo id
-        public function buscarContato()
+        public function buscaContato()
         {
             
         }

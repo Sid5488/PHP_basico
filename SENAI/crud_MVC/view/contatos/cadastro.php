@@ -1,4 +1,12 @@
+<?php
+    // 
 
+    // 
+
+    // $contato = 
+
+  
+?>
     	<div id="cadastro">
         	
             <form name="frmcontatos" method="post" action="router.php?controller=contatos&modo=novo">
@@ -49,9 +57,18 @@
                 <td>Opções</td>
               </tr>
                 
-            
-           
+              <?php 
+                  require_once('controller/contatoController.php');
+
+                  $contatoController = new ContatoController();
+
+                  $listDados = $contatoController->listaContato();
+
+                  var_dump($listDados);
+                  
+              ?> 
               <tr class="tblconsulta_dados">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -64,6 +81,7 @@
                   <img src="view/icones/consulta.png" width="24" height="24">
                 </td>
               </tr>
+              
             </table>
         </div>    
         

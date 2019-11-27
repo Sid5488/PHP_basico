@@ -37,7 +37,7 @@
             catch(PDOException $erro){
                 echo("Erro ao realizar conexão com o BD <br> 
                       Linha: ".$erro->getLine()." <br> 
-                      Mensagem: "$erro->getMessage());
+                      Mensagem: ".$erro->getMessage());
             }
             
         }

@@ -17,8 +17,9 @@
         
         //CONSTRUTOR DA CLASSE
         public function __construct(){
-            //Importe do arquivo de conexão
+            //Importe de arquivos
             require_once('conexaoMysql.php');
+            require_once('model/contatoClass.php');
             
             //instância da classe de conexão 
             $this->conexaoMysql = new ConexaoMysql();
@@ -65,6 +66,28 @@
         //SELECIONA TODOS OS CONTATOS
         public function selectAllContato()
         {
+            //Script com o select 
+            $sql = "select * from tblcontatos";
+
+            //Manda p/ o bd
+            $select = $this->conexao->query($sql);
+
+            $cont = 0;
+
+            while($rs = $select->fetch(PDO::FETCH_ASSOC))
+            {
+                //Instancia da classe Contato, criando uma coleção de objetos
+                $listContato[] = new Contato();
+                $listContato[$cont]->setCodigo($rs['codigo']);
+                $listContato[$cont]->setNome($rs['nome']);
+                $listContato[$cont]->setTelefone($rs['telefone']);
+                $listContato[$cont]->setCelular($rs['celular']);
+                $listContato[$cont]->setEmail($rs['email']);
+
+                $cont++;
+            }
+
+            return $listContato;
             
         }
         //SELECIONA UM CONTATO PELO ID
