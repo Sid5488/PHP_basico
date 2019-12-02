@@ -5,63 +5,91 @@
         * DATA DE CRIAÇÃO: 25/11/19
         * MODIFICAÇÕES:
           DATA:
-          ALTERAÇÕES REALIZADAS:
+          ALTERAÇÕES REALIZADAS: 
           NOME DO DESENVOLVEDOR:
     */
     class ContatoController
     {
+        //Atributos da classe
+        private $contato;
+        private $contatoDAO;
+        
         //Construtor da classe
         public function __construct(){
             //Importe como se tivesse no arquivo index
-           require_once('model/contatoClass.php');
-           require_once('model/DAO/contatoDAO.php');
+            require_once('model/contatoClass.php');
+            require_once('model/DAO/contatoDAO.php');
+            
+            //Instancia da classe contatoDAO
+            $this->contatoDAO = new ContatoDAO();
+            
+            //Valida se a requisição que está chegando pelo método do form é post
+            if($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+               //Instância da classe contato
+                $this->contato = new Contato();
+
+                //Guarda nos atributos da classe o Post do FORM
+                $this->contato->setNome($_POST['txtnome']);
+                $this->contato->setTelefone($_POST['txttelefone']);
+                $this->contato->setCelular($_POST['txtcelular']);
+                $this->contato->setEmail($_POST['txtemail']); 
+            }
+            
         } 
         
         //Novo contato
         public function novoContato()
         {
-            //Instância da classe contato
-            $contato = new Contato();
-            
-            //Guarda nos atributos da classe o Post do FORM
-            $contato->setNome($_POST['txtnome']);
-            $contato->setTelefone($_POST['txttelefone']);
-            $contato->setCelular($_POST['txtcelular']);
-            $contato->setEmail($_POST['txtemail']);
-            
-            //Instância da classe ContatoDAO
-            $contatoDAO = new ContatoDAO();
-            
             //Chama o método de inserir e manda o objeto contato
-            $contatoDAO->insertContato($contato);
+            if($this->contatoDAO->insertContato($this->contato))
+                header('location:index.php');
+            else
+                echo('Erro ao inserir registro no bd');
         }
         
         //Atualiza/edita um contato
-        public function atualizaContato()
+        public function atualizaContato($idContato)
         {
+            $this->contato->setCodigo($idContato);
+            
+            //Verifica o retorno do método que atualiza contato
+            if($this->contatoDAO->updateContato($this->contato))
+                header('location:index.php');
+            else
+               echo('Erro ao atualizar registro no bd');  
             
         }
         
         //Exclui um contato
-        public function deletaContato()
+        public function deletaContato($idContato)
         {
-            
+            //Chama o método para excluir no bd um registro
+            if($this->contatoDAO->deleteContato($idContato))
+                header('location:index.php');
+            else
+                echo('Erro ao excluir registro no bd');            
         }
         
         //Lista todos os contatos
         public function listaContato()
         {
-            //Instancia da classe contatoDAO
-            $contatoController = new ContatoDAO();
-            
             //Chama o método que seleciona todos os registros
-            return $contatoController->selectAllContato();
+            $list = $this->contatoDAO->selectAllContato();
+            
+            if($list)
+                return $list;
+            else
+                die();
         }
         
         //Busca um contato pelo id
-        public function buscaContato()
+        public function buscarContato($idContato)
         {
+            //Método p/ buscar no bd o registro referente ao id/codigo
+            $dadosContato = $this->contatoDAO->selectByIdContato($idContato);
             
+            require_once('index.php');
         }
         
     }

@@ -24,11 +24,39 @@
                     
                     break;
                     
+                case 'BUSCAR':
+                    //Resgata o id enviado pela view no click do excluir
+                    $id = $_GET['id'];
+                    
+                    //instancia da classe controller
+                    $contatoController = new ContatoController();
+                    
+                    //Método p/ buscar um registro pelo id
+                    $contatoController->buscarContato($id);
+                    
+                    break;
+                    
                 case 'ATUALIZAR':
+                    //Resgata o id enviado pela view 
+                    $id = $_GET['id'];
+                    
+                    //instancia da classe controller
+                    $contatoController = new ContatoController();
+                    
+                    //Método p/ atualizar um registro pelo id
+                    $contatoController->atualizaContato($id);
                     
                     break;
                 
                 case 'EXCLUIR':
+                    //Resgata o id enviado pela view no click do excluir
+                    $id = $_GET['id'];
+                    
+                    //instancia da classe controller
+                    $contatoController = new ContatoController();
+                    
+                    //método para excluir o registro
+                    $contatoController->deletaContato($id);
                     
                     break;
             }

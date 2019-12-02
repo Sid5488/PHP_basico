@@ -47,22 +47,52 @@
             );
             
             if($statement->execute($statementDados)){
-                echo("Registro inserido com sucesso");
+                return true;
             }
             else{
-                echo("Erro ao executar o script no bd");
+                return false;
             }
         }
+        
         //ATUALIZA UM CONTATO
-        public function updateContato()
+        public function updateContato(Contato $contato)
         {
+           //Script p/ o bd
+           $sql = "update tblcontatos set nome=?, telefone=?, celular=?, email=? where codigo=?";
+        
+           //Prepara o script
+           $statement = $this->conexao->prepare($sql);
             
+           //Array com os dados do objeto
+           $statementDados = array(
+                $contato->getNome(),
+                $contato->getTelefone(),
+                $contato->getCelular(),
+                $contato->getEmail(),
+                $contato->getCodigo()
+            );
+            //Manda p/ o bd e verifica seu retorno
+            if($statement->execute($statementDados))
+                return true;
+            else
+                return false;
         }
+        
         //EXCLUI UM CONTATO
-        public function deleteContato()
+        public function deleteContato($codeContato)
         {
+            //Script p/ o delete
+            $sql = "delete from tblcontatos where codigo=".$codeContato;
             
+            
+            if($this->conexao->query($sql)){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
+        
         //SELECIONA TODOS OS CONTATOS
         public function selectAllContato()
         {
@@ -87,13 +117,34 @@
                 $cont++;
             }
 
-            return $listContato;
+            if(isset($listContato))
+                return $listContato;
+            else
+                return false;
             
         }
+        
         //SELECIONA UM CONTATO PELO ID
-        public function selectByIdContato()
+        public function selectByIdContato($codeContato)
         {
+            //Script com select do contato pelo id
+            $sql = "select * from tblcontatos where codigo=".$codeContato;
             
+            //Manda p/ o bd
+            $select = $this->conexao->query($sql);
+
+            if($rs = $select->fetch(PDO::FETCH_ASSOC))
+            {
+                //Instancia da classe Contato, criando uma coleção de objetos
+                $listContato = new Contato();
+                $listContato->setCodigo($rs['codigo']);
+                $listContato->setNome($rs['nome']);
+                $listContato->setTelefone($rs['telefone']);
+                $listContato->setCelular($rs['celular']);
+                $listContato->setEmail($rs['email']);
+
+            }
+            return $listContato;
         }
         
     }
